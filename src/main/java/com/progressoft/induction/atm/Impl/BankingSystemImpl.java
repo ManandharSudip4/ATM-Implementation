@@ -2,7 +2,6 @@ package com.progressoft.induction.atm.Impl;
 
 import com.progressoft.induction.atm.BankingSystem;
 import com.progressoft.induction.atm.Banknote;
-import com.progressoft.induction.atm.exceptions.InsufficientFundsException;
 import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -27,8 +26,6 @@ public class BankingSystemImpl implements BankingSystem {
   }
 
   public BigDecimal sumOfMoneyInAtm() {
-    // Your code
-
     BigDecimal sum = BigDecimal.ZERO;
 
     for (Map.Entry<Banknote, Integer> entry : atmCashMap.entrySet()) {
@@ -43,7 +40,6 @@ public class BankingSystemImpl implements BankingSystem {
 
   @Override
   public BigDecimal getAccountBalance(String accountNumber) {
-    //your code
     if (accountBalanceMap.containsKey(accountNumber)) {
       return accountBalanceMap.get(accountNumber);
     }
@@ -52,8 +48,9 @@ public class BankingSystemImpl implements BankingSystem {
 
   @Override
   public void debitAccount(String accountNumber, BigDecimal amount) {
-    //your code
-    accountBalanceMap.put(accountNumber, accountBalanceMap.get(accountNumber).subtract(amount));
-
+    accountBalanceMap.put(
+      accountNumber,
+      accountBalanceMap.get(accountNumber).subtract(amount)
+    );
   }
 }

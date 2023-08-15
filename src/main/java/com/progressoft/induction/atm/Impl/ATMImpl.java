@@ -8,34 +8,26 @@ import com.progressoft.induction.atm.exceptions.NotEnoughMoneyInATMException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ATMImpl implements ATM {
 
   List<Banknote> withdrawalNotes = new ArrayList<>();
-
   private final BankingSystemImpl bankingSystem = new BankingSystemImpl();
 
   @Override
   public List<Banknote> withdraw(String accountNumber, BigDecimal amount) {
-    // Todo 1: Check if a user exists? : done
-    // Todo 2: Check if user has enough money in his/her account? done
-    // 2 can be done interface Banking System and its getAccountBalance
-
+    BigDecimal totalAmount = bankingSystem.sumOfMoneyInAtm();
     BigDecimal remainingBalance = bankingSystem.getAccountBalance(
       accountNumber
     );
 
-    // try {
-    // }
-    BigDecimal totalAmount = bankingSystem.sumOfMoneyInAtm();
-
+    // Checking if withdrawl amount is greater that Money in ATM.
     if (amount.compareTo(totalAmount) > 0) {
       throw new NotEnoughMoneyInATMException("Not Enough Money in ATM");
     }
 
+    // Checking if Account Exists or not.
     if (remainingBalance == null) {
       throw new AccountNotFoundException("Account Number Does not exists.");
     }
@@ -55,7 +47,7 @@ public class ATMImpl implements ATM {
 
       System.out.println("Cash Map Before: " + bankingSystem.atmCashMap);
 
-      // withdraws logic
+      // withdrawing logic
       List<Banknote> reverseKeys = new ArrayList<>(
         bankingSystem.atmCashMap.keySet()
       );
@@ -73,9 +65,6 @@ public class ATMImpl implements ATM {
           amount = amount.remainder(entry.getValue());
         }
       }
-
-      
-
 
       System.out.println(bankingSystem.atmCashMap.get(Banknote.FIVE_JOD));
 

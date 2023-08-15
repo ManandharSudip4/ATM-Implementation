@@ -16,7 +16,6 @@ class ATMTest {
 
   @BeforeEach
   void setUp() {
-    //TODO: initialize the atm here
     this.atm = new ATMImpl();
   }
 
