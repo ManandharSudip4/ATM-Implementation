@@ -18,9 +18,7 @@ public class ATMImpl implements ATM {
   @Override
   public List<Banknote> withdraw(String accountNumber, BigDecimal amount) {
     BigDecimal totalAmount = bankingSystem.sumOfMoneyInAtm();
-    BigDecimal remainingBalance = bankingSystem.getAccountBalance(
-      accountNumber
-    );
+    BigDecimal remainingBalance = checkBalance(accountNumber);
 
     // Checking if withdrawl amount is greater that Money in ATM.
     if (amount.compareTo(totalAmount) > 0) {
@@ -32,26 +30,14 @@ public class ATMImpl implements ATM {
       throw new AccountNotFoundException("Account Number Does not exists.");
     }
 
-    System.out.println("Accounts have enough money");
     if (amount.compareTo(remainingBalance) <= 0) {
-      System.out.println(
-        "Account Number: " +
-        accountNumber +
-        "\nAmount to be withdrawn: " +
-        amount +
-        "\nAmount in Bank: " +
-        remainingBalance
-      );
-
       bankingSystem.debitAccount(accountNumber, amount);
 
-      System.out.println("Cash Map Before: " + bankingSystem.atmCashMap);
-
-      // withdrawing logic
       List<Banknote> reverseKeys = new ArrayList<>(
         bankingSystem.atmCashMap.keySet()
       );
       Collections.reverse(reverseKeys);
+      // withdrawing logic
       for (Banknote entry : reverseKeys) {
         if (amount.compareTo(entry.getValue()) >= 0) {
           int numNotes = amount.divide(entry.getValue()).intValue();
@@ -65,24 +51,12 @@ public class ATMImpl implements ATM {
           amount = amount.remainder(entry.getValue());
         }
       }
-
-      System.out.println(bankingSystem.atmCashMap.get(Banknote.FIVE_JOD));
-
-      System.out.println("---------------- After Withdrawl -------------");
-      System.out.println("Cash Out: " + withdrawalNotes);
-      System.out.println(
-        "New Balance: " + bankingSystem.getAccountBalance(accountNumber)
-      );
-      System.out.println(
-        "Cash Map After Withdrawl: " + bankingSystem.atmCashMap
-      );
     } else {
       throw new InsufficientFundsException(
         "You don't have sufficient balance! Thank You"
       );
     }
 
-    // Needs to return the amount if all criteria is fulfilled.
     return withdrawalNotes;
   }
 
